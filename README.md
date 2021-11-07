@@ -87,3 +87,8 @@ fn debug_system(
 ```
 
 ![bevy_egui_debug](bevy_egui_debug_screenshot.png)
+
+# Bevy support
+|bevy|bevy_egui|bevy_egui_debug|
+|---|---|---|
+|0.5|0.7|main|
