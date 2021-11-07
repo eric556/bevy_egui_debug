@@ -46,11 +46,11 @@ fn struct_data_impl(data: DataStruct) -> TokenStream {
 
 fn named_struct_impl(idents: &Vec<Ident>) -> TokenStream {
     quote! {
-        fn debug(&self, ui: &mut Ui) {
+        fn debug(&self, ui: &mut egui::Ui) {
             #(self.#idents.debug(ui);)*
         }
     
-        fn debug_mut(&mut self, ui: &mut Ui) {
+        fn debug_mut(&mut self, ui: &mut egui::Ui) {
             #(self.#idents.debug_mut(ui);)*
         }
     }
@@ -75,11 +75,11 @@ fn unnamed_struct_impl(num_fields: usize) -> TokenStream {
     }
 
     quote! {
-        fn debug(&self, ui: &mut Ui) {
+        fn debug(&self, ui: &mut egui::Ui) {
             #(#debug_statments)*
         }
     
-        fn debug_mut(&mut self, ui: &mut Ui) {
+        fn debug_mut(&mut self, ui: &mut egui::Ui) {
             #(#debug_mut_statments)*
         }
     }
@@ -98,11 +98,11 @@ fn enum_data_impl(name: Ident, data: DataEnum) -> TokenStream{
     }).collect();
 
     quote! {
-        fn debug(&self, ui: &mut Ui) {
+        fn debug(&self, ui: &mut egui::Ui) {
             ui.label(format!("{:?}", self));
         }
     
-        fn debug_mut(&mut self, ui: &mut Ui) {
+        fn debug_mut(&mut self, ui: &mut egui::Ui) {
             egui::ComboBox::from_label(#label).selected_text(format!("{:?}", self)).show_ui(ui, |ui| {
                     #(
                         ui.selectable_value(self, #name::#variant_idents, #variant_ident_strings);
