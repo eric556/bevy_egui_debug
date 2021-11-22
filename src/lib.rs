@@ -1,6 +1,6 @@
 use std::fmt::{Display};
-use bevy::math::{XY, XYZ, XYZW};
 use bevy_egui::egui::{self, Ui};
+use bevy_math::{XY, XYZ, XYZW};
 pub use derive::*;
 
 pub trait EguiDebug {
@@ -89,6 +89,14 @@ impl<T> EguiDebug for XYZW<T> where T: Display + EguiDebug {
             self.z.debug_mut(ui);
             self.w.debug_mut(ui);
         });
+    }
+}
+
+impl EguiDebug for String {
+    default_debug!(Self);
+
+    fn debug_mut(&mut self, ui: &mut Ui) {
+        ui.text_edit_singleline(self);
     }
 }
 

@@ -30,8 +30,9 @@ fn struct_data_impl(data: DataStruct) -> TokenStream {
 
     match data.fields {
         Fields::Named(named_fields) => {
-            let field_idents: Vec<Ident> = named_fields.named.iter().map(|field| {
-                field.ident.as_ref().unwrap().clone()
+            let field_idents: Vec<(String, Ident)> = named_fields.named.iter().map(|field| {
+                let ident = field.ident.as_ref().unwrap().clone();
+                (ident.to_string(), ident)
             }).collect();
 
             named_struct_impl(&field_idents)
@@ -44,14 +45,27 @@ fn struct_data_impl(data: DataStruct) -> TokenStream {
     }
 }
 
-fn named_struct_impl(idents: &Vec<Ident>) -> TokenStream {
+fn named_struct_impl(idents: &Vec<(String, Ident)>) -> TokenStream {
+    let names: Vec<&String> = idents.iter().map(|(name, _)| { name }).collect();
+    let id: Vec<&Ident> = idents.iter().map(|(_, ident)| { ident }).collect();
+
     quote! {
-        fn debug(&self, ui: &mut egui::Ui) {
-            #(self.#idents.debug(ui);)*
+        fn debug(&self, ui: &mut bevy_egui::egui::Ui) {
+            #(
+                ui.horizontal(|ui|{
+                    ui.label(#names);
+                    self.#id.debug(ui);
+                });
+            )*
         }
     
-        fn debug_mut(&mut self, ui: &mut egui::Ui) {
-            #(self.#idents.debug_mut(ui);)*
+        fn debug_mut(&mut self, ui: &mut bevy_egui::egui::Ui) {
+            #(
+                ui.horizontal(|ui|{
+                    ui.label(#names);
+                    self.#id.debug_mut(ui);
+                });
+            )*
         }
     }
 }
@@ -75,11 +89,11 @@ fn unnamed_struct_impl(num_fields: usize) -> TokenStream {
     }
 
     quote! {
-        fn debug(&self, ui: &mut egui::Ui) {
+        fn debug(&self, ui: &mut bevy_egui::egui::Ui) {
             #(#debug_statments)*
         }
     
-        fn debug_mut(&mut self, ui: &mut egui::Ui) {
+        fn debug_mut(&mut self, ui: &mut bevy_egui::egui::Ui) {
             #(#debug_mut_statments)*
         }
     }
@@ -98,12 +112,12 @@ fn enum_data_impl(name: Ident, data: DataEnum) -> TokenStream{
     }).collect();
 
     quote! {
-        fn debug(&self, ui: &mut egui::Ui) {
+        fn debug(&self, ui: &mut bevy_egui::egui::Ui) {
             ui.label(format!("{:?}", self));
         }
     
-        fn debug_mut(&mut self, ui: &mut egui::Ui) {
-            egui::ComboBox::from_label(#label).selected_text(format!("{:?}", self)).show_ui(ui, |ui| {
+        fn debug_mut(&mut self, ui: &mut bevy_egui::egui::Ui) {
+            bevy_egui::egui::ComboBox::from_label(#label).selected_text(format!("{:?}", self)).show_ui(ui, |ui| {
                     #(
                         ui.selectable_value(self, #name::#variant_idents, #variant_ident_strings);
                     )*
