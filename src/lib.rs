@@ -1,5 +1,5 @@
 use std::fmt::{Display};
-use bevy::math::{XY, XYZ, XYZW};
+use bevy_math::{XY, XYZ, XYZW};
 use bevy_egui::egui::{self, Ui};
 pub use derive::*;
 
