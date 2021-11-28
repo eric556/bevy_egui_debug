@@ -1,8 +1,4 @@
 use std::fmt::{Display};
-<<<<<<< HEAD
-=======
-use bevy_math::{XY, XYZ, XYZW};
->>>>>>> ea2601b898a08a7e526dd6d6dc4c1c84f4b9fb0f
 use bevy_egui::egui::{self, Ui};
 use bevy_math::{XY, XYZ, XYZW};
 pub use derive::*;
